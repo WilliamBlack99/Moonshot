@@ -7,6 +7,7 @@ if __name__ == "__main__":
     import setup
     import power
     import animation
+    import alien
 
     # create game window
     # window and game_screen are different for future fullscreen support with working resolution
@@ -20,7 +21,7 @@ if __name__ == "__main__":
 
     # image loading
     home_dir = dirname(realpath(__file__))
- 
+
     # load map
     planet_coords, moon_angles = setup.load_map(join(home_dir, "maps/map_1.txt"))
 
@@ -55,9 +56,17 @@ if __name__ == "__main__":
     human_power, human_power_font, human_power_rects, human_power_surfaces, human_power_background_surfaces = setup.load_power_lists(len(planet_rects), font_size, alpha)
     alien_power, alien_power_font, alien_power_rects, alien_power_surfaces, alien_power_background_surfaces = setup.load_power_lists(len(planet_rects), font_size, alpha)
 
+    # start with the humans' turn
+    player_turn = True
+
     # game loop
     game_running = True
     while game_running:
+
+        if player_turn:
+            pass
+        else:
+            player_turn = alien.take_turn()
 
         # update animations
         for i in range(len(planet_rects)):
@@ -123,3 +132,8 @@ if __name__ == "__main__":
                 if event.key == K_ESCAPE:
                     game_running = False
                     break
+
+                # turn based testing
+                if event.key == K_SPACE and player_turn is True:
+                    print("Player Turn Complete")
+                    player_turn = False
