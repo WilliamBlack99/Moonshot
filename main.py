@@ -6,6 +6,8 @@ if __name__ == "__main__":
     from pygame.locals import *
     import setup
     import power
+    import animation
+    import alien
 
     # create game window
     # window and game_screen are different for future fullscreen support with working resolution
@@ -19,22 +21,30 @@ if __name__ == "__main__":
 
     # image loading
     home_dir = dirname(realpath(__file__))
-    planet_img_1 = pygame.image.load(join(home_dir, "images/planets/planet_1.png"))
-    planet_img_1.convert()
-    moon_img_1 = pygame.image.load(join(home_dir, "images/moons/moon_1.png"))
-    moon_img_1.convert_alpha()
 
     # load map
     planet_coords, moon_angles = setup.load_map(join(home_dir, "maps/map_1.txt"))
 
     # load the planets
     planet_size = 50
-    planet_rects, planet_surfaces = setup.load_planets(planet_coords, (planet_img_1,), planet_size)
+    planet_rects = setup.load_planets(planet_coords, planet_size)
+    planet_animation_types = ["tundra_planet" for i in range(len(planet_rects))]
+    planet_current_frames = [0 for i in range(len(planet_rects))]
+    planet_surfaces = [pygame.Surface((0, 0)) for i in range(len(planet_rects))]
 
     # load the moons
     moon_size = 20
     moon_distance = 50
-    moon_rects, moon_surfaces, moon_indices = setup.load_moons(planet_rects, moon_angles, (moon_img_1,), moon_size, moon_distance)
+    moon_rects, moon_indices = setup.load_moons(planet_rects, moon_angles, moon_size, moon_distance)
+    moon_animation_types = ["plain_moon" for i in range(len(moon_rects))]
+    moon_current_frames = [0 for i in range(len(moon_rects))]
+    moon_surfaces = [pygame.Surface((0, 0)) for i in range(len(moon_rects))]
+
+    # load the animations
+    animations = {}     # contains tuples of images for each animation
+    frames = {}         # contains tuples of integers corresponding to the duration in frames of the animation in animations
+    animations["tundra_planet"], frames["tundra_planet"] = animation.load_animation(join(home_dir, "images/planets/tundra_planet"), "tundra", (1,))
+    animations["plain_moon"], frames["plain_moon"] = animation.load_animation(join(home_dir, "images/moons/plain_moon"), "moon", (1,))
 
     # load military power counters
     human_power_font_color = (49, 126, 204)    # blue
@@ -46,9 +56,24 @@ if __name__ == "__main__":
     human_power, human_power_font, human_power_rects, human_power_surfaces, human_power_background_surfaces = setup.load_power_lists(len(planet_rects), font_size, alpha)
     alien_power, alien_power_font, alien_power_rects, alien_power_surfaces, alien_power_background_surfaces = setup.load_power_lists(len(planet_rects), font_size, alpha)
 
+    # start with the humans' turn
+    player_turn = True
+
     # game loop
     game_running = True
     while game_running:
+
+        if player_turn:
+            pass
+        else:
+            player_turn = alien.take_turn()
+
+        # update animations
+        for i in range(len(planet_rects)):
+            planet_surfaces[i], planet_current_frames[i] = animation.get_surface(animations[planet_animation_types[i]], frames[planet_animation_types[i]], planet_rects[i], planet_current_frames[i])
+        for i in range(len(moon_rects)):
+            moon_surfaces[i], moon_current_frames[i] = animation.get_surface(animations[moon_animation_types[i]], frames[moon_animation_types[i]], moon_rects[i], moon_current_frames[i])
+
         # fill the background
         window.fill((0, 0, 0))
         game_screen.fill((0, 0, 0))
@@ -107,3 +132,8 @@ if __name__ == "__main__":
                 if event.key == K_ESCAPE:
                     game_running = False
                     break
+
+                # turn based testing
+                if event.key == K_SPACE and player_turn is True:
+                    print("Player Turn Complete")
+                    player_turn = False
