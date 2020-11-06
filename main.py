@@ -20,11 +20,7 @@ if __name__ == "__main__":
 
     # image loading
     home_dir = dirname(realpath(__file__))
-    # planet_img_1 = pygame.image.load(join(home_dir, "images/planets/planet_1.png"))
-    # planet_img_1.convert_alpha()
-    # moon_img_1 = pygame.image.load(join(home_dir, "images/moons/moon_1.png"))
-    # moon_img_1.convert_alpha()
-
+ 
     # load map
     planet_coords, moon_angles = setup.load_map(join(home_dir, "maps/map_1.txt"))
 
