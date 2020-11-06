@@ -47,25 +47,19 @@ def load_map(map_directory):
 
 
 # generate a list of rects and a list of surfaces where each index corresponds to a planet
-def load_planets(coords, images,  size):
-    planet_surfaces = []
+def load_planets(coords, size):
     planet_rects = []
 
     for x, y in coords:
         planet_rects.append(pygame.Rect(x, y, size, size))  # create a rect for the planet
 
-        # copy and scale a random planet image to be the planet surface
-        img = pygame.transform.scale(choice(images).copy(), (size, size))
-        planet_surfaces.append(img)
-
-    return planet_rects, planet_surfaces
+    return planet_rects
 
 
 # generate a list of rects and a list of surfaces where each index corresponds to a planet
 # also generate a list of lists of where each sublist is a list of moon indices orbiting the corresponding planet
-def load_moons(planet_rects, angles, images, size, distance):
+def load_moons(planet_rects, angles, size, distance):
     moon_rects = []
-    moon_surfaces = []
     moon_indices = []
 
     for i in range(len(planet_rects)):
@@ -82,14 +76,12 @@ def load_moons(planet_rects, angles, images, size, distance):
             moon_rects.append(new_rect)
             indices.append(len(moon_rects) - 1)
 
-            img = pygame.transform.scale(choice(images).copy(), (size, size))
-            moon_surfaces.append(img)
-
         moon_indices.append(indices)
 
-    return moon_rects, moon_surfaces, moon_indices
+    return moon_rects, moon_indices
 
 
+# initialize the lists having to do with the power levels
 def load_power_lists(planet_count, font_size, alpha=255):
     power_font = pygame.font.SysFont(None, font_size, True)
 
@@ -102,3 +94,6 @@ def load_power_lists(planet_count, font_size, alpha=255):
         surface.set_alpha(alpha)
 
     return power, power_font, power_rects, power_surfaces, power_background_surfaces
+
+
+
