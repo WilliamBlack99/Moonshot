@@ -85,3 +85,17 @@ def load_moons(planet_rects, angles, images, size, distance):
         moon_indices.append(indices)
 
     return moon_rects, moon_surfaces, moon_indices
+
+
+def load_power_lists(planet_count, font_size, alpha=255):
+    power_font = pygame.font.SysFont(None, font_size, True)
+
+    power = [15 for i in range(planet_count)]
+    power_rects = [pygame.Rect(0, 0, 0, 0) for i in range(planet_count)]
+    power_surfaces = [pygame.Surface((0, 0)) for i in range(planet_count)]
+    power_background_surfaces = [pygame.Surface((0, 0)) for i in range(planet_count)]
+    for surface in power_background_surfaces:
+        surface.fill((255, 255, 255))
+        surface.set_alpha(alpha)
+
+    return power, power_font, power_rects, power_surfaces, power_background_surfaces
