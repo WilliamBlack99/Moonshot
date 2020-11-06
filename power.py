@@ -1,8 +1,14 @@
-from random import randint
+from random import randint, seed
+from time import time
 import pygame
 pygame.init()
 
+seed(time())
 
+
+# represents the fighting between aliens and humans on a planet
+# both sides take damage equal to the power of the other side
+# if both sides are equal, one side will do one less damage at random
 def fight(human_power, alien_power, planet_index):
     human_strength = human_power[planet_index]
     alien_strength = alien_power[planet_index]
@@ -25,6 +31,7 @@ def fight(human_power, alien_power, planet_index):
     return human_power, alien_power
 
 
+# modify the lists containing surfaces, rects, etc. having to do with the power counters to match the change in the power values
 def update_power_lists(power, old_power, power_rects, power_surfaces, power_background_surfaces, power_font, power_font_color):
     for i in range(len(power)):
         power_surfaces[i] = power_font.render(str(power[i]), True, power_font_color)

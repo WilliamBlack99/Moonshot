@@ -1,7 +1,10 @@
-from random import choice
+from random import choice, seed
+from time import time
 from math import sin, cos, radians
 import pygame
 pygame.init()
+
+seed(time())
 
 
 # find the locations of planets and the angles of their moons from a .txt file
