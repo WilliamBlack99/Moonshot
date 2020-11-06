@@ -35,17 +35,34 @@ if __name__ == "__main__":
     moon_distance = 50
     moon_rects, moon_surfaces, moon_indices = setup.load_moons(planet_rects, moon_angles, (moon_img_1,), moon_size, moon_distance)
 
+    # load military power counters
+    military_power_color = (0, 0, 255)  # blue
+    military_power_font = pygame.font.SysFont(None, 40, True)
+    #military_power = [None for i in range(len(planet_rects))]
+    military_power = [10]   # for testing
+
     # game loop
     game_running = True
     while game_running:
+        # fill the background
         window.fill((0, 0, 0))
         game_screen.fill((50, 50, 50))
 
+        # display the planets
         for i in range(len(planet_rects)):
             game_screen.blit(planet_surfaces[i], planet_rects[i])
 
+        # display the moons
         for i in range(len(moon_rects)):
             game_screen.blit(moon_surfaces[i], moon_rects[i])
+
+        # display the military power of planets
+        for i in range(len(military_power)):
+            if military_power[i]:
+                text_surface = military_power_font.render(str(military_power[i]), True, military_power_color)
+                text_rect = pygame.Rect(0, 0, text_surface.get_width(), text_surface.get_height())
+                text_rect.center = planet_rects[i].center
+                game_screen.blit(text_surface, text_rect)
 
         # reflect changes on the window
         clock.tick(fps)

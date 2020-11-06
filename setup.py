@@ -43,19 +43,23 @@ def load_map(map_directory):
     return planet_coords, planet_moon_angles
 
 
+# generate a list of rects and a list of surfaces where each index corresponds to a planet
 def load_planets(coords, images,  size):
     planet_surfaces = []
     planet_rects = []
 
     for x, y in coords:
-        planet_rects.append(pygame.Rect(x, y, size, size))
+        planet_rects.append(pygame.Rect(x, y, size, size))  # create a rect for the planet
 
+        # copy and scale a random planet image to be the planet surface
         img = pygame.transform.scale(choice(images).copy(), (size, size))
         planet_surfaces.append(img)
 
     return planet_rects, planet_surfaces
 
 
+# generate a list of rects and a list of surfaces where each index corresponds to a planet
+# also generate a list of lists of where each sublist is a list of moon indices orbiting the corresponding planet
 def load_moons(planet_rects, angles, images, size, distance):
     moon_rects = []
     moon_surfaces = []
@@ -65,11 +69,10 @@ def load_moons(planet_rects, angles, images, size, distance):
         indices = []
 
         for angle in angles[i]:
+            # calculate the moon's position using its planet's position, the distance from the planet, and the angle from the planet
             new_rect = pygame.Rect(0, 0, size, size)
-
             relative_x = int(distance * cos(radians(angle)))
             relative_y = int(distance * sin(radians(angle)))
-
             new_rect.centerx = planet_rects[i].centerx + relative_x
             new_rect.centery = planet_rects[i].centery + relative_y
 
